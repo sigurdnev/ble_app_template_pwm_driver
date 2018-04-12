@@ -116,7 +116,6 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
     {
         //nrf_gpio_pin_toggle(LED_3);
         
-
         NRF_LOG_INFO("myNumber: %d",*p_evt_write->data);
         pwm_update_duty_cycle(*p_evt_write->data);
 
