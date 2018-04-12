@@ -32,11 +32,11 @@ void pwm_update_duty_cycle(uint32_t duty_cycle)
     // Check if value is outside of range. If so, set to 100%
     if(duty_cycle >= 1000)
     {
-        seq_values->channel_0 = 1000 | 0x8000;
+        seq_values->channel_0 = 1000;
     }
     else
     {
-        seq_values->channel_0 = duty_cycle | 0x8000;
+        seq_values->channel_0 = duty_cycle;
     }
     
     nrf_drv_pwm_simple_playback(&m_pwm0, &seq, 1, NRF_DRV_PWM_FLAG_LOOP);
@@ -62,6 +62,9 @@ static void pwm_init(void)
     };
     // Init PWM without error handler
     APP_ERROR_CHECK(nrf_drv_pwm_init(&m_pwm0, &config0, NULL));
+
+    //Set to 0% duty
+    pwm_update_duty_cycle(0);
     
 }
 
@@ -112,6 +115,7 @@ static void on_write(ble_cus_t * p_cus, ble_evt_t const * p_ble_evt)
     if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
     {
         //nrf_gpio_pin_toggle(LED_3);
+        
 
         NRF_LOG_INFO("myNumber: %d",*p_evt_write->data);
         pwm_update_duty_cycle(*p_evt_write->data);
